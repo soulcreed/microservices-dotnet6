@@ -1,6 +1,5 @@
-﻿namespace Shopp.Web.Models
-{
-    public class ProductModel
+﻿namespace Shopp.CarAPI.Data.ValueObjects
+{    public class ProductVO
     {
         public long Id { get; set; }
         public string Name { get; set; }

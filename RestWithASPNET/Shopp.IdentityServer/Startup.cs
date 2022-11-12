@@ -1,11 +1,11 @@
-﻿using Duende.IdentityServer.AspNetIdentity;
-using Duende.IdentityServer.Services;
+﻿using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shopp.IdentityServer.Configuration;
 using Shopp.IdentityServer.Initializer;
-using Shopp.IdentityServer.Model.Contexto;
 using Shopp.IdentityServer.Model;
+using Shopp.IdentityServer.Model.Contexto;
+using Shopp.IdentityServer.Services;
 
 namespace Shopp.IdentityServer
 {
@@ -45,7 +45,7 @@ namespace Shopp.IdentityServer
                     .AddAspNetIdentity<ApplicationUser>();
 
             services.AddScoped<IDbInitializer, DbInitializer>();
-            //services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             builder.AddDeveloperSigningCredential();
 

@@ -18,7 +18,6 @@ namespace Shopp.ProductAPI.Controllers
                 ArgumentException(nameof(repository));
         }
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ProductVO>>> FindAll()
         {
             var product = await _repository.FindAll();
@@ -26,7 +25,7 @@ namespace Shopp.ProductAPI.Controllers
 
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<ProductVO>> FindById(long id)
         {
@@ -53,7 +52,7 @@ namespace Shopp.ProductAPI.Controllers
             return Ok(product);
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult> Delete(long id)
         {

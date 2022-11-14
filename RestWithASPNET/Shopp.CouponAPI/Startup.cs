@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shopp.CouponAPI.Config;
 using Shopp.CouponAPI.Model.Context;
+using Shopp.CouponAPI.Repository;
 
 namespace Shopp.CouponAPI
 {
@@ -24,11 +27,11 @@ namespace Shopp.CouponAPI
                         new MySqlServerVersion(
                             new Version(8, 0, 3))));
 
-            //IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-            //services.AddSingleton(mapper);
+            IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+            services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            //services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICouponRepository, CouponRepository>();
 
             services.AddControllers();
 

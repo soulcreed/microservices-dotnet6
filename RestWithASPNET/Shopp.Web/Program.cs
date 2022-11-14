@@ -12,10 +12,11 @@ namespace Shopp.Web
 
             // Add services to the container.
             builder.Services.AddHttpClient<IProductService, ProductService>(c =>
-                c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:ProductApi"])); ;
+                c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:ProductApi"]));
             builder.Services.AddHttpClient<ICartService, CartService>(c =>
-                    c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:CartAPI"])
-                );
+                    c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:CartAPI"]));
+            builder.Services.AddHttpClient<ICouponService, CouponService>(c =>
+                    c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:CouponAPI"]));
 
             builder.Services.AddControllersWithViews();
 

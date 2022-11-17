@@ -16,5 +16,6 @@
         public string CardNumber { get; set; }
         public string CVV { get; set; }
         public string ExpiryMothYear { get; set; }
+        public IEnumerable<CartDetailViewModel> CartDetails { get; set; }
     }
 }

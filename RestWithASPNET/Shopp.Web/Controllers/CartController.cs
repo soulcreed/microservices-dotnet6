@@ -33,7 +33,7 @@ namespace Shopp.Web.Controllers
         {
             var token = await HttpContext.GetTokenAsync("access_token");
             var userId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
-            if(model.CartDetails == null) model.CartDetails  = new List<CartDetailViewModel>();       
+            if (model.CartDetails == null) model.CartDetails = new List<CartDetailViewModel>();
             var response = await _cartService.ApplyCoupon(model, token);
 
             if (response)
@@ -77,6 +77,30 @@ namespace Shopp.Web.Controllers
         public async Task<IActionResult> Checkout()
         {
             return View(await FindUserCart());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Checkout(CartViewModel model)
+        {
+            var token = await HttpContext.GetTokenAsync("access_token");
+            model.CartHeader.CouponCode = String.Empty;
+            var response = await _cartService.Checkout(model.CartHeader, token);
+
+            if (response != null && response.GetType() == typeof(string))
+            {
+                TempData["Error"] = response;
+                return RedirectToAction(nameof(Checkout));
+            }
+            else if (response != null)
+            {
+                return RedirectToAction(nameof(Confirmation));
+            }
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Confirmation()
+        {
+            return View();
         }
 
         private async Task<CartViewModel> FindUserCart()

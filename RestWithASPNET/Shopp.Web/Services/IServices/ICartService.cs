@@ -13,6 +13,6 @@ namespace Shopp.Web.Services.IServices
         Task<bool> RemoveCoupon(string userId, string token);
         Task<bool> ClearCart(string userId, string token);
 
-        Task<CartViewModel> Checkout(CartHeaderViewModel cartHeader, string token);
+        Task<object> Checkout(CartHeaderViewModel cartHeader, string token);
     }
 }

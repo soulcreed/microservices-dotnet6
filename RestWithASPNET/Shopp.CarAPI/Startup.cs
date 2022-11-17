@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shopp.CarAPI.Config;
 using Shopp.CarAPI.Model.Context;
+using Shopp.CarAPI.RabbitMQSender;
 using Shopp.CarAPI.Repository;
 
 namespace Shopp.CarAPI
@@ -26,12 +27,15 @@ namespace Shopp.CarAPI
                 UseMySql(connection,
                         new MySqlServerVersion(
                             new Version(8, 0, 3))));
+            services.AddHttpClient<ICouponRepository, CouponRepository>(s => s.BaseAddress =
+                new Uri(Configuration["ServiceUrls:CouponAPI"]));
 
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICartRepository, CartRepository>(); 
+            services.AddSingleton<IRabbitMQMessageSender, RabbitMQMessageSender>(); 
 
             services.AddControllers();
 

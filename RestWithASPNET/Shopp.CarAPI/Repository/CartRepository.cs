@@ -52,7 +52,7 @@ namespace Shopp.CarAPI.Repository
             Cart cart = new()
             {
                 CartHeader = await _context.CartHeaders
-                    .FirstOrDefaultAsync(c => c.UserId == userId),
+                    .FirstOrDefaultAsync(c => c.UserId == userId) ?? new CartHeader(),
             };
             cart.CartDetails = _context.CartDetails
                 .Where(c => c.CartHeaderId == cart.CartHeader.Id)
@@ -79,7 +79,7 @@ namespace Shopp.CarAPI.Repository
             try
             {
                 CartDetail cartDetail = await _context.CartDetails
-                    .FirstOrDefaultAsync(c => c.Id == cartDetailsId);
+                    .FirstOrDefaultAsync(c => c.Id == cartDetailsId) ?? new CartDetail();
 
                 int total = _context.CartDetails
                     .Where(c => c.CartHeaderId == cartDetail.CartHeaderId).Count();

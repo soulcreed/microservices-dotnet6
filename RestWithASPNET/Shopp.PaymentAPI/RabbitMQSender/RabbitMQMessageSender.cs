@@ -12,7 +12,10 @@ namespace Shopp.PaymentAPI.RabbitMQSender
         private readonly string _password;
         private readonly string _userName;
         private IConnection _connection;
-        private const string ExchangeName = "FanoutPaymentExchange";
+        private const string ExchangeName = "DirectPaymentExchange";
+        private const string PaymentEmailUpdateQueueName = "PaymentEmailUpdateQueueName";
+        private const string PaymentOrderUpdateQueueName = "PaymentOrderUpdateQueueName";
+
 
         public RabbitMQMessageSender()
         {
@@ -23,13 +26,22 @@ namespace Shopp.PaymentAPI.RabbitMQSender
 
         public void SendMessage(BaseMessage message)
         {
-            if(ConnectionExists())
+            if (ConnectionExists())
             {
                 using var channel = _connection.CreateModel();
-                channel.ExchangeDeclare(ExchangeName, ExchangeType.Fanout, durable:false);
+
+                channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct, durable: false);
+                channel.QueueDeclare(PaymentEmailUpdateQueueName, false, false, false, null);
+                channel.QueueDeclare(PaymentOrderUpdateQueueName, false, false, false, null);
+
+                channel.QueueBind(PaymentEmailUpdateQueueName, ExchangeName, "PaymentEmail");
+                channel.QueueBind(PaymentOrderUpdateQueueName, ExchangeName, "PaymentOrder");
+
                 byte[] body = GetMessageAsByteArray(message);
                 channel.BasicPublish(
-                    exchange: ExchangeName, "", basicProperties: null, body: body);
+                    exchange: ExchangeName, "PaymentEmail", basicProperties: null, body: body);
+                channel.BasicPublish(
+                    exchange: ExchangeName, "PaymentOrder", basicProperties: null, body: body);
             }
         }
 
@@ -64,8 +76,8 @@ namespace Shopp.PaymentAPI.RabbitMQSender
         }
 
         private bool ConnectionExists()
-        {   
-            if(_connection != null) return true;
+        {
+            if (_connection != null) return true;
             CreateConnection();
             return _connection != null;
         }
